@@ -118,15 +118,49 @@ dotnet run
 **Output**:
 ```
 info: Microsoft.Hosting.Lifetime[14]
-      Now listening on: http://localhost:5096
+      Now listening on: http://localhost:5000
 ```
 
-The server will start on `http://localhost:5096`
+The server will start on `http://localhost:5000`
 
 ## Port Forwarding & Public Access
 
 ### Local Development
-- MCP endpoints available at: `http://localhost:5096/mcp` and `http://localhost:5096/`
+- MCP endpoints available at: `http://localhost:5000/mcp` and `http://localhost:5000/`
+
+### VS Code Port Forwarding (Recommended)
+
+#### Enable Port Forwarding in VS Code Terminal
+
+1. **Automatic Port Forwarding** (Recommended)
+   - VS Code automatically detects when your app runs on port 5000
+   - A notification will appear asking to forward the port
+   - Click **"Forward Port"** to enable
+
+2. **Manual Port Forwarding via Terminal**
+   - Open VS Code Terminal (Ctrl + `)
+   - Click the **PORTS** tab at the bottom
+   - Click **"Forward a Port"**
+   - Enter `5000` as the port number
+   - Press Enter
+
+3. **Command Line Option**
+   - Add this flag when running the server:
+   ```bash
+   dotnet run --launch-profile https
+   ```
+
+4. **Access Your Public URL**
+   - Once forwarded, VS Code generates a public URL (e.g., `https://vt4s9jrv-5000.app.github.dev`)
+   - This URL is accessible from anywhere
+   - The port visibility can be set to "Public" or "Private" in the PORTS panel
+
+#### Port Forwarding Status
+- **PORTS tab** shows:
+  - **Port**: 5000
+  - **Forwarded Address**: Your public HTTPS URL
+  - **Visibility**: Public (accessible to anyone) or Private (only you)
+  - **Origin**: User Forwarded
 
 ### Remote Access / Port Forwarding
 
@@ -134,13 +168,13 @@ If running on a remote machine or container:
 
 #### Using SSH Tunneling (Local Machine)
 ```bash
-ssh -L 5096:localhost:5096 user@remote-host
+ssh -L 5000:localhost:5000 user@remote-host
 ```
-Then access at: `http://localhost:5096/mcp`
+Then access at: `http://localhost:5000/mcp`
 
 #### Using ngrok (Quick Public URL)
 ```bash
-ngrok http 5096
+ngrok http 5000
 ```
 This provides a public HTTPS URL forward to your local server.
 
@@ -161,13 +195,13 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
-EXPOSE 5096
+EXPOSE 5000
 ENTRYPOINT ["dotnet", "MCPServer-EntraId.dll"]
 ```
 
 ```bash
 docker build -t mcp-server .
-docker run -p 5096:5096 -e ASPNETCORE_URLS=http://+:5096 mcp-server
+docker run -p 5000:5000 -e ASPNETCORE_URLS=http://+:5000 mcp-server
 ```
 
 ## API Usage
@@ -178,7 +212,7 @@ All requests must include a valid JWT Bearer token from Azure Entra ID:
 
 ```bash
 curl -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  http://localhost:5096/mcp
+  http://localhost:5000/mcp
 ```
 
 **Getting a Token**:
@@ -195,7 +229,7 @@ curl -X POST \
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"tool": "chuckNorrisJoke"}' \
-  http://localhost:5096/mcp
+  http://localhost:5000/mcp
 ```
 
 ## Project Structure
