@@ -1,0 +1,12 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.dll
+*.exe
+*.pdb
+appsettings.*.json
+!appsettings.json
+/publish
+publish.zip
